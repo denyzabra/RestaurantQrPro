@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { QrCode, Smartphone, Users, BarChart3, MessageCircle, Sparkles } from "lucide-react";
+import Logo from "@/components/logo";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -14,8 +15,11 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <span className="text-2xl font-bold text-primary">SnapServe</span>
-              <span className="ml-2 text-sm text-gray-600">QR Restaurant Ordering</span>
+              <Logo size="sm" showText={false} />
+              <div className="ml-3">
+                <span className="text-2xl font-bold text-primary">SnapServe</span>
+                <span className="ml-2 text-sm text-gray-600">QR Restaurant Ordering</span>
+              </div>
             </div>
             <div className="flex items-center space-x-4">
               {user ? (

@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2, QrCode, Smartphone, BarChart3 } from "lucide-react";
+import Logo from "@/components/logo";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertUserSchema } from "@shared/schema";
@@ -73,6 +74,7 @@ export default function AuthPage() {
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
+            <Logo size="lg" className="justify-center mb-4" />
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to SnapServe</h1>
             <p className="text-gray-600">Sign in to your account or create a new one</p>
           </div>

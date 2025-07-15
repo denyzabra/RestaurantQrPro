@@ -24,6 +24,7 @@ import {
   Coffee
 } from "lucide-react";
 import { Order } from "@shared/schema";
+import Logo from "@/components/logo";
 
 export default function StaffDashboard() {
   const { user } = useAuth();

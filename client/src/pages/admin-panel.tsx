@@ -30,6 +30,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertMenuItemSchema, insertTableSchema, insertCategorySchema } from "@shared/schema";
 import { z } from "zod";
+import Logo from "@/components/logo";
 
 type MenuItemFormData = z.infer<typeof insertMenuItemSchema>;
 type TableFormData = z.infer<typeof insertTableSchema>;

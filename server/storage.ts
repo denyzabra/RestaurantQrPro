@@ -1,6 +1,8 @@
 import session from "express-session";
 import createMemoryStore from "memorystore";
 import { nanoid } from "nanoid";
+import { scrypt, randomBytes } from "crypto";
+import { promisify } from "util";
 import {
   users, restaurants, tables, categories, menuItems, orders, orderItems, feedback, inventory,
   type User, type Restaurant, type Table, type Category, type MenuItem, 
@@ -11,6 +13,13 @@ import {
 } from "@shared/schema";
 
 const MemoryStore = createMemoryStore(session);
+const scryptAsync = promisify(scrypt);
+
+async function createHashedPassword(password: string) {
+  const salt = randomBytes(16).toString("hex");
+  const buf = (await scryptAsync(password, salt, 64)) as Buffer;
+  return `${buf.toString("hex")}.${salt}`;
+}
 
 export interface IStorage {
   sessionStore: session.Store;
@@ -117,20 +126,22 @@ export class MemStorage implements IStorage {
       isActive: true,
     });
 
-    // Create admin user
+    // Create admin user with proper hashed password
+    const adminPassword = await createHashedPassword("AdminPass123!");
     await this.createUser({
       username: "admin",
       email: "admin@bellavista.com",
-      password: "$2b$10$rXZvqE8l1xU8OXlGZvP7X.wGF3.eF3YL9ZL.qJjQJw8vGcY8qZ1Eq", // AdminPass123!
+      password: adminPassword,
       role: "admin",
       isActive: true,
     });
 
-    // Create staff user
+    // Create staff user with proper hashed password
+    const staffPassword = await createHashedPassword("StaffPass123!");
     await this.createUser({
       username: "staff",
       email: "staff@bellavista.com", 
-      password: "$2b$10$s8KLrqF8l1xU8OXlGZvP7X.wGF3.eF3YL9ZL.qJjQJw8vGcY8qZ1Eq", // StaffPass123!
+      password: staffPassword,
       role: "staff",
       isActive: true,
     });

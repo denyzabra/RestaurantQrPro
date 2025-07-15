@@ -8,6 +8,25 @@ SnapServe is a comprehensive, mobile-first QR code restaurant ordering platform 
 
 Preferred communication style: Simple, everyday language.
 
+## Recent Updates (July 15, 2025)
+
+### Authentication System Fixed
+- Resolved password comparison errors in authentication system
+- Fixed TypeScript type compatibility issues in storage layer
+- Implemented proper scrypt-based password hashing for sample data
+- Login functionality now working for both admin and staff accounts
+
+### Logo Implementation
+- Added custom SnapServe logo component with user-uploaded image
+- Integrated logo across key pages: auth page, home page, admin panel, staff dashboard
+- Logo component supports different sizes (sm, md, lg, xl) and text display options
+
+### Current Status
+- Application running successfully on port 5000
+- OpenAI API integration active with user-provided key
+- Sample data loaded: Bella Vista restaurant with 4 menu items, 20 tables, 2 inventory items
+- Authentication working: admin@bellavista.com / AdminPass123!, staff@bellavista.com / StaffPass123!
+
 ## System Architecture
 
 ### Frontend Architecture
