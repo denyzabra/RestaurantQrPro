@@ -178,8 +178,8 @@ export default function AdminPanel() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <span className="text-2xl font-bold text-primary">SnapServe</span>
-              <span className="ml-2 text-sm text-gray-600">Admin Dashboard</span>
+              <Logo size="sm" showText={false} />
+              <span className="ml-3 text-sm text-gray-600">Admin Dashboard</span>
             </div>
             <div className="flex items-center space-x-4">
               <Badge variant="secondary">

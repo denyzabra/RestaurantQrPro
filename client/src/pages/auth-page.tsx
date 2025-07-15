@@ -36,7 +36,7 @@ export default function AuthPage() {
 
   // Redirect if already logged in
   if (user) {
-    setLocation("/");
+    setTimeout(() => setLocation("/"), 0);
     return null;
   }
 
@@ -75,7 +75,7 @@ export default function AuthPage() {
         <div className="w-full max-w-md">
           <div className="text-center mb-8">
             <Logo size="lg" className="justify-center mb-4" />
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome to SnapServe</h1>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome</h1>
             <p className="text-gray-600">Sign in to your account or create a new one</p>
           </div>
 

@@ -13,7 +13,7 @@ const sizeClasses = {
   xl: "h-24 w-24"
 };
 
-export default function Logo({ className = "", size = "md", showText = true }: LogoProps) {
+export default function Logo({ className = "", size = "md", showText = false }: LogoProps) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <img 

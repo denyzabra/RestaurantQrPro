@@ -20,6 +20,13 @@ Preferred communication style: Simple, everyday language.
 - Added custom SnapServe logo component with user-uploaded image
 - Integrated logo across key pages: auth page, home page, admin panel, staff dashboard
 - Logo component supports different sizes (sm, md, lg, xl) and text display options
+- Removed SnapServe text branding, keeping only logo for clean visual identity
+
+### Database Schema
+- Added comprehensive PostgreSQL schema file (`database/schema.sql`)
+- Includes all table structures, relationships, indexes, and triggers
+- Supports users, restaurants, tables, menu items, orders, feedback, and inventory
+- Designed for scalability with proper normalization and performance optimization
 
 ### Current Status
 - Application running successfully on port 5000

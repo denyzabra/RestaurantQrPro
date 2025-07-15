@@ -16,10 +16,7 @@ export default function HomePage() {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <Logo size="sm" showText={false} />
-              <div className="ml-3">
-                <span className="text-2xl font-bold text-primary">SnapServe</span>
-                <span className="ml-2 text-sm text-gray-600">QR Restaurant Ordering</span>
-              </div>
+              <span className="ml-3 text-sm text-gray-600">QR Restaurant Ordering</span>
             </div>
             <div className="flex items-center space-x-4">
               {user ? (
