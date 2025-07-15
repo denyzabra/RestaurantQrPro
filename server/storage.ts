@@ -81,6 +81,13 @@ export interface IStorage {
   getInventoryItem(id: number): Promise<Inventory | undefined>;
   createInventoryItem(item: InsertInventory): Promise<Inventory>;
   updateInventoryItem(id: number, updates: Partial<Inventory>): Promise<Inventory | undefined>;
+  
+  // Analytics methods
+  getAnalytics(timeRange: string): Promise<any>;
+  getSalesData(timeRange: string): Promise<any>;
+  getCustomerInsights(timeRange: string): Promise<any>;
+  getProductAnalytics(timeRange: string): Promise<any>;
+  getTimeAnalytics(timeRange: string): Promise<any>;
 }
 
 export class MemStorage implements IStorage {
@@ -575,6 +582,105 @@ export class MemStorage implements IStorage {
     const updatedInventory = { ...inventory, ...updates, updatedAt: new Date() };
     this.inventory.set(id, updatedInventory);
     return updatedInventory;
+  }
+
+  // Analytics methods
+  async getAnalytics(timeRange: string): Promise<any> {
+    return {
+      salesData: {
+        totalRevenue: 2580.00,
+        revenueGrowth: 15.2,
+        totalOrders: 48,
+        ordersGrowth: 8.5,
+        averageOrderValue: 53.75,
+        aovGrowth: 6.2,
+        dailySales: this.generateMockDailySales(timeRange)
+      },
+      customerData: {
+        totalCustomers: 32,
+        newCustomers: 12,
+        returningCustomers: 20,
+        customerSatisfaction: 4.3,
+        topCustomers: [
+          { name: "John Smith", orders: 8, totalSpent: 245.50 },
+          { name: "Sarah Johnson", orders: 6, totalSpent: 198.75 },
+          { name: "Mike Davis", orders: 5, totalSpent: 167.25 },
+          { name: "Lisa Wilson", orders: 4, totalSpent: 134.00 },
+          { name: "David Brown", orders: 3, totalSpent: 89.50 }
+        ]
+      },
+      productData: {
+        topSellingItems: [
+          { name: "Signature Burger", quantity: 24, revenue: 479.76 },
+          { name: "Classic Margherita Pizza", quantity: 18, revenue: 359.82 },
+          { name: "Grilled Salmon", quantity: 15, revenue: 374.85 },
+          { name: "Caesar Salad", quantity: 12, revenue: 143.88 }
+        ],
+        categoryPerformance: [
+          { category: "Main Courses", revenue: 1450.00, orders: 28 },
+          { category: "Appetizers", revenue: 680.00, orders: 15 },
+          { category: "Beverages", revenue: 350.00, orders: 18 },
+          { category: "Desserts", revenue: 100.00, orders: 6 }
+        ]
+      },
+      timeData: {
+        peakHours: this.generatePeakHours(),
+        weeklyTrends: this.generateWeeklyTrends()
+      }
+    };
+  }
+
+  async getSalesData(timeRange: string): Promise<any> {
+    return (await this.getAnalytics(timeRange)).salesData;
+  }
+
+  async getCustomerInsights(timeRange: string): Promise<any> {
+    return (await this.getAnalytics(timeRange)).customerData;
+  }
+
+  async getProductAnalytics(timeRange: string): Promise<any> {
+    return (await this.getAnalytics(timeRange)).productData;
+  }
+
+  async getTimeAnalytics(timeRange: string): Promise<any> {
+    return (await this.getAnalytics(timeRange)).timeData;
+  }
+
+  private generateMockDailySales(timeRange: string): any[] {
+    const days = timeRange === '24h' ? 1 : timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90;
+    const data = [];
+    const today = new Date();
+    
+    for (let i = days - 1; i >= 0; i--) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      data.push({
+        date: date.toISOString().split('T')[0],
+        revenue: Math.floor(Math.random() * 500) + 200,
+        orders: Math.floor(Math.random() * 20) + 5
+      });
+    }
+    
+    return data;
+  }
+
+  private generatePeakHours(): any[] {
+    const hours = [];
+    for (let hour = 8; hour <= 22; hour++) {
+      hours.push({
+        hour: `${hour}:00`,
+        orders: Math.floor(Math.random() * 15) + (hour >= 12 && hour <= 14 ? 10 : hour >= 18 && hour <= 20 ? 12 : 2)
+      });
+    }
+    return hours;
+  }
+
+  private generateWeeklyTrends(): any[] {
+    const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    return dayNames.map(day => ({
+      day,
+      revenue: Math.floor(Math.random() * 600) + 300 + (day === 'Friday' || day === 'Saturday' ? 200 : 0)
+    }));
   }
 }
 

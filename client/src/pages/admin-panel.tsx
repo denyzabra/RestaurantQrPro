@@ -24,13 +24,15 @@ import {
   Package,
   QrCode,
   Star,
-  Clock
+  Clock,
+  BarChart3
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { insertMenuItemSchema, insertTableSchema, insertCategorySchema } from "@shared/schema";
 import { z } from "zod";
 import Logo from "@/components/logo";
+import AnalyticsDashboard from "@/components/analytics-dashboard";
 
 type MenuItemFormData = z.infer<typeof insertMenuItemSchema>;
 type TableFormData = z.infer<typeof insertTableSchema>;
@@ -192,12 +194,13 @@ export default function AdminPanel() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="menu">Menu</TabsTrigger>
             <TabsTrigger value="tables">Tables</TabsTrigger>
             <TabsTrigger value="inventory">Inventory</TabsTrigger>
             <TabsTrigger value="staff">Staff</TabsTrigger>
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
@@ -705,6 +708,20 @@ export default function AdminPanel() {
                 </CardContent>
               </Card>
             </div>
+          </TabsContent>
+
+          <TabsContent value="analytics" className="space-y-6">
+            <div className="flex items-center space-x-4 mb-6">
+              <div className="bg-blue-100 p-3 rounded-lg">
+                <BarChart3 className="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <h2 className="text-2xl font-bold text-gray-900">Advanced Analytics</h2>
+                <p className="text-gray-600">Comprehensive insights into your restaurant's performance</p>
+              </div>
+            </div>
+            
+            <AnalyticsDashboard />
           </TabsContent>
         </Tabs>
       </div>

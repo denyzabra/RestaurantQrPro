@@ -503,6 +503,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Advanced analytics dashboard
+  app.get("/api/analytics/dashboard", requireRole(["admin"]), async (req, res) => {
+    try {
+      const timeRange = req.query.timeRange as string || "7d";
+      const analytics = await storage.getAnalytics(timeRange);
+      res.json(analytics);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get dashboard analytics" });
+    }
+  });
+
+  app.get("/api/analytics/sales", requireRole(["admin"]), async (req, res) => {
+    try {
+      const timeRange = req.query.timeRange as string || "7d";
+      const salesData = await storage.getSalesData(timeRange);
+      res.json(salesData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get sales analytics" });
+    }
+  });
+
+  app.get("/api/analytics/customers", requireRole(["admin"]), async (req, res) => {
+    try {
+      const timeRange = req.query.timeRange as string || "7d";
+      const customerData = await storage.getCustomerInsights(timeRange);
+      res.json(customerData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get customer analytics" });
+    }
+  });
+
+  app.get("/api/analytics/products", requireRole(["admin"]), async (req, res) => {
+    try {
+      const timeRange = req.query.timeRange as string || "7d";
+      const productData = await storage.getProductAnalytics(timeRange);
+      res.json(productData);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get product analytics" });
+    }
+  });
+
   // Analytics
   app.get("/api/analytics", requireRole(["admin"]), async (req, res) => {
     try {
