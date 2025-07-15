@@ -1,0 +1,58 @@
+Build **SnapServe**—a full‑featured, mobile‑first QR‑code restaurant ordering platform—from scratch on Replit. Deliver a complete MVP with customer, staff, and admin experiences, plus built‑in AI features and test credentials.
+
+---
+
+## Tech Stack  
+- **Frontend:** Next.js + TypeScript + MUI in PWA mode (mobile‑first, installable, kiosk‑ready)  
+- **Backend:** Django + Django REST Framework + PostgreSQL  
+- **AI Integration:**  
+  - Python LangChain pipelines in Django for meal recommendations, inventory predictions, and sentiment analysis  
+  - LangChain.js in Next.js for a floating chat assistant widget  
+
+---
+
+## Required Features & Flows
+
+### 1. Customer (No Login)  
+- Scan table‑specific QR code → `/menu/[tableId]`  
+- Browse categories, add to cart, place order (auto‑tagged with table)  
+- Confirmation screen with estimated prep time  
+
+### 2. Staff Dashboard (Waiter Role)  
+- Login form with credentials auto‑generated on setup  
+- Real‑time order queue filtered by table  
+- Buttons to mark orders “Preparing,” “Served,” or “Cancelled”  
+- Manual order creation for walk‑ins  
+
+### 3. Admin Dashboard  
+- Login form with credentials auto‑generated on setup  
+- Manage Menu Items (CRUD with images, categories, prices)  
+- Manage Tables (CRUD, QR code regeneration)  
+- Manage Staff Accounts (view, create, disable)  
+- View Orders & Statuses across all tables  
+- View basic analytics: top‑selling items, busiest hours  
+
+### 4. AI‑Powered Features  
+- **Personalized Recommendations:** “Customers like you also ordered…”  
+- **Smart Upsells:** Dynamic prompts at checkout via GPT  
+- **Predictive Inventory Alerts:** Low‑stock warnings in Admin dashboard  
+- **Sentiment Analysis:** Post‑order feedback flagging in Staff dashboard  
+- **Chat Assistant:** Natural‑language Q&A on `/assistant`, allergy filters, specials  
+
+---
+
+## Testing & Credentials  
+- On first run, auto‑create two test accounts with clear console output:  
+  1. **Admin** → e.g. `admin@example.com` / `AdminPass123!`  
+  2. **Staff** → e.g. `staff@example.com` / `StaffPass123!`  
+
+---
+
+## Instructions for Replit AI Agent  
+- Scaffold both frontend and backend in one Replit project  
+- Wire up QR code generation, mobile‑first UI, PWA config  
+- Integrate Python LangChain pipelines and LangChain.js chat  
+- Build role‑based dashboards with all listed features  
+- Print test credentials in the server console or a README once setup completes  
+- Use sensible folder structure, environment configuration, and database migrations  
+- Deliver a working app you can immediately `npm run dev` / `python manage.py runserver` 
