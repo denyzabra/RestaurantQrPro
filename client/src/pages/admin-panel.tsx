@@ -130,9 +130,9 @@ export default function AdminPanel() {
     defaultValues: {
       name: "",
       description: "",
-      price: "",
+      price: "0",
       imageUrl: "",
-      categoryId: undefined,
+      categoryId: 0,
       restaurantId: 1,
       isAvailable: true,
       isPopular: false,
@@ -162,14 +162,17 @@ export default function AdminPanel() {
   });
 
   const onCreateMenuItem = (data: MenuItemFormData) => {
+    console.log("Creating menu item:", data);
     createMenuItemMutation.mutate(data);
   };
 
   const onCreateTable = (data: TableFormData) => {
+    console.log("Creating table:", data);
     createTableMutation.mutate(data);
   };
 
   const onCreateCategory = (data: CategoryFormData) => {
+    console.log("Creating category:", data);
     createCategoryMutation.mutate(data);
   };
 
@@ -198,7 +201,6 @@ export default function AdminPanel() {
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="menu">Menu</TabsTrigger>
             <TabsTrigger value="tables">Tables</TabsTrigger>
-            <TabsTrigger value="inventory">Inventory</TabsTrigger>
             <TabsTrigger value="staff">Staff</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
           </TabsList>
@@ -406,7 +408,10 @@ export default function AdminPanel() {
                 <form onSubmit={menuItemForm.handleSubmit(onCreateMenuItem)} className="space-y-4">
                   <div>
                     <Label htmlFor="name">Name</Label>
-                    <Input {...menuItemForm.register("name")} placeholder="Item name" />
+                    <Input {...menuItemForm.register("name", { required: "Name is required" })} placeholder="Item name" />
+                    {menuItemForm.formState.errors.name && (
+                      <p className="text-sm text-red-500 mt-1">{menuItemForm.formState.errors.name.message}</p>
+                    )}
                   </div>
                   
                   <div>
@@ -417,7 +422,17 @@ export default function AdminPanel() {
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="price">Price</Label>
-                      <Input {...menuItemForm.register("price")} placeholder="0.00" type="number" step="0.01" />
+                      <Input 
+                        {...menuItemForm.register("price", { 
+                          required: "Price is required",
+                          min: { value: 0, message: "Price must be positive" }
+                        })} 
+                        placeholder="10000" 
+                        type="text"
+                      />
+                      {menuItemForm.formState.errors.price && (
+                        <p className="text-sm text-red-500 mt-1">{menuItemForm.formState.errors.price.message}</p>
+                      )}
                     </div>
                     <div>
                       <Label htmlFor="category">Category</Label>
@@ -437,7 +452,7 @@ export default function AdminPanel() {
                   </div>
                   
                   <div>
-                    <Label htmlFor="imageUrl">Image URL</Label>
+                    <Label htmlFor="imageUrl">Image URL (Optional)</Label>
                     <Input {...menuItemForm.register("imageUrl")} placeholder="https://..." />
                   </div>
                   
@@ -446,7 +461,7 @@ export default function AdminPanel() {
                       Cancel
                     </Button>
                     <Button type="submit" disabled={createMenuItemMutation.isPending}>
-                      Create Item
+                      {createMenuItemMutation.isPending ? "Creating..." : "Create Item"}
                     </Button>
                   </div>
                 </form>
@@ -573,10 +588,21 @@ export default function AdminPanel() {
                   </DialogDescription>
                 </DialogHeader>
                 {selectedQRTable && (
-                  <QRCodeGenerator 
-                    value={`${window.location.origin}/menu/${selectedQRTable.qrCode}`}
-                    tableNumber={selectedQRTable.number}
-                  />
+                  <div className="flex flex-col items-center space-y-4">
+                    <QRCodeGenerator 
+                      value={`${window.location.origin}/menu/${selectedQRTable.id}`}
+                      tableNumber={selectedQRTable.number}
+                      size={200}
+                    />
+                    <div className="text-center">
+                      <p className="text-sm text-gray-600">
+                        Scan to access menu for Table {selectedQRTable.number}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {window.location.origin}/menu/{selectedQRTable.id}
+                      </p>
+                    </div>
+                  </div>
                 )}
               </DialogContent>
             </Dialog>

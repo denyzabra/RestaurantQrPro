@@ -578,6 +578,91 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Restaurant management routes
+  app.post("/api/restaurants", async (req, res) => {
+    try {
+      const restaurantData = req.body;
+      const restaurant = await storage.createRestaurant(restaurantData);
+      res.status(201).json(restaurant);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
+  app.get("/api/restaurants/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const restaurant = await storage.getRestaurant(id);
+      if (!restaurant) {
+        return res.status(404).json({ message: "Restaurant not found" });
+      }
+      res.json(restaurant);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.patch("/api/restaurants/:id", requireAuth, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = req.body;
+      const restaurant = await storage.updateRestaurant(id, updates);
+      if (!restaurant) {
+        return res.status(404).json({ message: "Restaurant not found" });
+      }
+      res.json(restaurant);
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  // Staff management routes
+  app.get("/api/staff", requireAuth, async (req, res) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.sendStatus(403);
+      }
+      
+      const restaurantId = req.user.restaurantId || 1;
+      const staff = await storage.getUsersByRestaurant(restaurantId);
+      res.json(staff.filter(user => user.role === "staff"));
+    } catch (error: any) {
+      res.status(500).json({ message: error.message });
+    }
+  });
+
+  app.post("/api/staff", requireAuth, async (req, res) => {
+    try {
+      if (req.user?.role !== "admin") {
+        return res.sendStatus(403);
+      }
+
+      const { username, email, password, firstName, lastName } = req.body;
+      const restaurantId = req.user.restaurantId || 1;
+
+      // Check if user already exists
+      const existingUser = await storage.getUserByEmail(email);
+      if (existingUser) {
+        return res.status(400).json({ message: "User with this email already exists" });
+      }
+
+      const staffUser = await storage.createStaffUser({
+        username,
+        email,
+        password,
+        firstName: firstName || "",
+        lastName: lastName || "",
+        role: "staff",
+      }, restaurantId);
+
+      // Remove password from response
+      const { password: _, ...userResponse } = staffUser;
+      res.status(201).json(userResponse);
+    } catch (error: any) {
+      res.status(400).json({ message: error.message });
+    }
+  });
+
   const httpServer = createServer(app);
 
   // WebSocket setup

@@ -30,10 +30,13 @@ export interface IStorage {
   getUserByEmail(email: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
   updateUser(id: number, updates: Partial<User>): Promise<User | undefined>;
+  getUsersByRestaurant(restaurantId: number): Promise<User[]>;
+  createStaffUser(user: InsertUser, restaurantId: number): Promise<User>;
   
   // Restaurant methods
   getRestaurant(id: number): Promise<Restaurant | undefined>;
   createRestaurant(restaurant: InsertRestaurant): Promise<Restaurant>;
+  updateRestaurant(id: number, updates: Partial<Restaurant>): Promise<Restaurant | undefined>;
   
   // Table methods
   getTables(): Promise<Table[]>;
@@ -320,9 +323,38 @@ export class MemStorage implements IStorage {
       phone: insertRestaurant.phone || null,
       email: insertRestaurant.email || null,
       isActive: insertRestaurant.isActive ?? true,
+      createdAt: new Date(),
     };
     this.restaurants.set(id, restaurant);
     return restaurant;
+  }
+
+  async updateRestaurant(id: number, updates: Partial<Restaurant>): Promise<Restaurant | undefined> {
+    const restaurant = this.restaurants.get(id);
+    if (!restaurant) return undefined;
+    
+    const updatedRestaurant = { ...restaurant, ...updates };
+    this.restaurants.set(id, updatedRestaurant);
+    return updatedRestaurant;
+  }
+
+  async getUsersByRestaurant(restaurantId: number): Promise<User[]> {
+    return Array.from(this.users.values()).filter(user => user.restaurantId === restaurantId);
+  }
+
+  async createStaffUser(insertUser: InsertUser, restaurantId: number): Promise<User> {
+    const hashedPassword = await createHashedPassword(insertUser.password);
+    const user: User = {
+      ...insertUser,
+      id: this.currentUserId++,
+      password: hashedPassword,
+      restaurantId,
+      role: insertUser.role || "staff",
+      isActive: insertUser.isActive ?? true,
+      createdAt: new Date(),
+    };
+    this.users.set(user.id, user);
+    return user;
   }
 
   // Table methods

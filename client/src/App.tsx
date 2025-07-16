@@ -11,13 +11,17 @@ import MenuPage from "@/pages/menu-page";
 import StaffDashboard from "@/pages/staff-dashboard";
 import AdminPanel from "@/pages/admin-panel";
 import ChatAssistant from "@/pages/chat-assistant";
+import PricingPage from "@/pages/pricing-page";
+import RestaurantSetup from "@/pages/restaurant-setup";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={HomePage} />
+      <Route path="/pricing" component={PricingPage} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/setup" component={RestaurantSetup} />
       <Route path="/menu/:tableId" component={MenuPage} />
       <Route path="/chat" component={ChatAssistant} />
       <ProtectedRoute path="/staff" component={StaffDashboard} requiredRole={["staff", "admin"]} />

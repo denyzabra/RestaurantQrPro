@@ -8,7 +8,10 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   password: text("password").notNull(),
   role: text("role").notNull().default("customer"), // customer, staff, admin
+  restaurantId: integer("restaurant_id").references(() => restaurants.id),
   isActive: boolean("is_active").notNull().default(true),
+  stripeCustomerId: text("stripe_customer_id"),
+  stripeSubscriptionId: text("stripe_subscription_id"),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -19,7 +22,15 @@ export const restaurants = pgTable("restaurants", {
   address: text("address"),
   phone: text("phone"),
   email: text("email"),
+  logo: text("logo"),
+  website: text("website"),
+  cuisine: text("cuisine"),
+  openingHours: json("opening_hours"),
+  subscriptionTier: text("subscription_tier").notNull().default("trial"), // trial, starter, pro, enterprise
+  subscriptionStatus: text("subscription_status").notNull().default("active"), // active, cancelled, expired
+  trialEndsAt: timestamp("trial_ends_at"),
   isActive: boolean("is_active").notNull().default(true),
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const tables = pgTable("tables", {
@@ -98,9 +109,22 @@ export const inventory = pgTable("inventory", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
+export const subscriptionPlans = pgTable("subscription_plans", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(), // Starter, Pro, Enterprise
+  price: integer("price").notNull(), // in UGX
+  currency: text("currency").notNull().default("UGX"),
+  features: json("features"), // JSON array of features
+  maxBranches: integer("max_branches").notNull().default(1),
+  hasAI: boolean("has_ai").notNull().default(false),
+  hasAnalytics: boolean("has_analytics").notNull().default(false),
+  hasCustomBranding: boolean("has_custom_branding").notNull().default(false),
+  isActive: boolean("is_active").notNull().default(true),
+});
+
 // Insert schemas
 export const insertUserSchema = createInsertSchema(users).omit({ id: true, createdAt: true });
-export const insertRestaurantSchema = createInsertSchema(restaurants).omit({ id: true });
+export const insertRestaurantSchema = createInsertSchema(restaurants).omit({ id: true, createdAt: true });
 export const insertTableSchema = createInsertSchema(tables).omit({ id: true, qrCode: true });
 export const insertCategorySchema = createInsertSchema(categories).omit({ id: true });
 export const insertMenuItemSchema = createInsertSchema(menuItems).omit({ id: true });
@@ -122,6 +146,7 @@ export const insertInventorySchema = createInsertSchema(inventory).omit({
   predictedDays: true, 
   updatedAt: true 
 });
+export const insertSubscriptionPlanSchema = createInsertSchema(subscriptionPlans).omit({ id: true });
 
 // Select types
 export type User = typeof users.$inferSelect;
@@ -133,6 +158,7 @@ export type Order = typeof orders.$inferSelect;
 export type OrderItem = typeof orderItems.$inferSelect;
 export type Feedback = typeof feedback.$inferSelect;
 export type Inventory = typeof inventory.$inferSelect;
+export type SubscriptionPlan = typeof subscriptionPlans.$inferSelect;
 
 // Insert types
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -144,3 +170,4 @@ export type InsertOrder = z.infer<typeof insertOrderSchema>;
 export type InsertOrderItem = z.infer<typeof insertOrderItemSchema>;
 export type InsertFeedback = z.infer<typeof insertFeedbackSchema>;
 export type InsertInventory = z.infer<typeof insertInventorySchema>;
+export type InsertSubscriptionPlan = z.infer<typeof insertSubscriptionPlanSchema>;
